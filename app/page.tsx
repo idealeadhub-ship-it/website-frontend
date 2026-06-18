@@ -27,12 +27,16 @@ export default async function Home() {
   }
 
   try {
-    [events, featuredProjects, teamMembers, galleryImages] = await Promise.all([
+    [events, teamMembers, galleryImages] = await Promise.all([
       api.events.getAll().catch(() => []),
-      api.projects.getAll().catch(() => []),
       api.team.getAll().catch(() => []),
       api.gallery.getAll().catch(() => []),
     ])
+
+    // Get only featured projects for homepage
+    const allProjects = await api.projects.getAll().catch(() => [])
+    featuredProjects = allProjects.filter((p: any) => p.is_featured)
+      .sort((a: any, b: any) => (a.display_order || 0) - (b.display_order || 0))
 
     const [mission, vision] = await Promise.all([
       api.content.get("mission").catch(() => null),
@@ -232,7 +236,7 @@ export default async function Home() {
                   </div>
                   <div className="flex flex-col flex-grow p-10 relative">
                     <h3 className="text-2xl font-display font-bold text-foreground mb-4">{project.title}</h3>
-                    <p className="text-foreground/70 line-clamp-3 mb-8 flex-grow leading-relaxed">{project.description}</p>
+                    <p className="text-foreground/70 line-clamp-3 mb-8 flex-grow leading-relaxed">{project.excerpt || project.description}</p>
                     <Link href="/projects" className="text-primary font-bold flex items-center gap-2 hover:gap-3 transition-all mt-auto uppercase tracking-wider text-sm">Learn More <ArrowRight className="h-4 w-4" /></Link>
                   </div>
                 </div>
