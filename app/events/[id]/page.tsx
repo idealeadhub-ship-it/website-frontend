@@ -72,7 +72,8 @@ async function getEvent(id: string) {
 }
 
 export default async function EventPage({ params }: EventPageProps) {
-  const event = await getEvent(params.id)
+  const { id } = await params
+  const event = await getEvent(id)
   if (!event) notFound()
   const imageUrl = getImageSrc(event.image_data)
 
@@ -133,7 +134,7 @@ export default async function EventPage({ params }: EventPageProps) {
           <div className="mt-8">
             {!isPastEvent ? (
               <Button asChild size="lg">
-                <Link href={`/events/${event.id}/register`}>Register Now</Link>
+                <Link href={`/events/${id}/register`}>Register Now</Link>
               </Button>
             ) : (
               <div className="rounded-md bg-gray-100 p-4 dark:bg-gray-800">

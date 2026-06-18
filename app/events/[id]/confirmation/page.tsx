@@ -8,7 +8,9 @@ interface ConfirmationPageProps {
   }
 }
 
-export default function ConfirmationPage({ params }: ConfirmationPageProps) {
+export default async function ConfirmationPage({ params }: ConfirmationPageProps) {
+  const { id } = await params
+
   return (
     <div className="container mx-auto px-4 py-16 md:py-24">
       <div className="mx-auto max-w-md rounded-lg border bg-white p-8 text-center shadow-md dark:border-gray-700 dark:bg-gray-800">
@@ -20,7 +22,7 @@ export default function ConfirmationPage({ params }: ConfirmationPageProps) {
         </p>
         <div className="mt-8 space-y-4">
           <Button asChild className="w-full">
-            <Link href={`/events/${params.id}`}>Back to Event</Link>
+            <Link href={`/events/${id}`}>Back to Event</Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
             <Link href="/events">Browse More Events</Link>

@@ -83,7 +83,8 @@ async function getGallery(id: string) {
 }
 
 export default async function GalleryDetailPage({ params }: GalleryDetailPageProps) {
-    const gallery = await getGallery(params.id)
+    const { id } = await params
+    const gallery = await getGallery(id)
 
     if (!gallery) {
         notFound()
