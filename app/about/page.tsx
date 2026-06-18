@@ -16,6 +16,24 @@ async function getRandomGalleryImage() {
 export default async function AboutPage() {
   const randomGalleryImage = await getRandomGalleryImage()
 
+  // Fetch mission and vision from Strapi (same source as homepage)
+  let siteContent = {
+    mission: { title: "Our Mission", content: "To identify and raise credible, competent, and principled leaders." },
+    vision: { title: "Our Vision", content: "High performing Leaders providing the nations with genuine leadership." }
+  }
+
+  try {
+    const [mission, vision] = await Promise.all([
+      api.content.get("mission").catch(() => null),
+      api.content.get("vision").catch(() => null),
+    ])
+
+    if (mission) siteContent.mission = mission
+    if (vision) siteContent.vision = vision
+  } catch (error) {
+    console.error("Failed to fetch mission/vision:", error)
+  }
+
   return (
     <div className="container mx-auto px-4 py-16 md:py-24">
       <div className="mx-auto max-w-3xl text-center">
@@ -35,18 +53,13 @@ export default async function AboutPage() {
           />
         </div>
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold">Our Vision</h2>
+          <h2 className="text-3xl font-bold">{siteContent.vision.title}</h2>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            High performing Leaders providing the nations with genuine leadership.
+            {siteContent.vision.content}
           </p>
-          <h2 className="text-3xl font-bold">Our Mission</h2>
+          <h2 className="text-3xl font-bold">{siteContent.mission.title}</h2>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            To identify young Leaders through a rigorous selection process that assess knowledge base; competence;
-            skills; apt for learning; intuition, relational abilities and character.
-          </p>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            To raise Credible, Competent and Principled drivers of Effective and Progressive leadership in the Nations
-            of life through strategic and deliberate leadership trainings and mentorship.
+            {siteContent.mission.content}
           </p>
         </div>
       </div>
